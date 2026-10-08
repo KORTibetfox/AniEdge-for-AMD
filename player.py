@@ -5,6 +5,8 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
 import sys
+import json
+import time
 
 ROOT = Path(__file__).resolve().parent
 
@@ -19,9 +21,10 @@ class Player:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("AniEdge for AMD")
-        self.root.geometry("750x350")
-        self.root.minsize(700, 350)
+        self.root.geometry("750x410")
+        self.root.minsize(700, 410)
         self.process = None
+        self.session_dir = None
         self.path = tk.StringVar()
         self.status = tk.StringVar(value="영상을 선택하세요. RX 9070 XT에서 Real-CUGAN Pro FP16으로 2배 복원합니다.")
         frame = ttk.Frame(self.root, padding=24)
@@ -59,7 +62,9 @@ class Player:
         self.stop()
         (ROOT / "logs").mkdir(exist_ok=True)
         try:
-            self.process = subprocess.Popen(command(video),
+            self.session_dir = ROOT / "logs" / ("hq-" + str(time.time_ns()))
+            self.session_dir.mkdir()
+            self.process = subprocess.Popen(command(video) + ["--session-dir", str(self.session_dir)],
                                             cwd=ROOT, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
             self.status.set("HQ — Real-CUGAN Pro FP16으로 재생 중입니다. 시간 탐색은 지원하지 않습니다.")
         except OSError as error:
@@ -83,7 +88,13 @@ class Player:
     def poll(self):
         if self.process and self.process.poll() is not None:
             code = self.process.returncode
-            self.status.set("재생 종료" if code == 0 else f"재생 실패 (코드 {code}). 로그 폴더를 확인하세요.")
+            detail = ""
+            if code and self.session_dir:
+                try:
+                    detail = json.loads((self.session_dir / "error.json").read_text(encoding="utf-8"))["message"]
+                except (OSError, ValueError, KeyError):
+                    detail = f"재생 실패 (코드 {code}). 로그 폴더를 확인하세요."
+            self.status.set("재생 종료" if code == 0 else detail)
             self.process = None
         self.root.after(500, self.poll)
 

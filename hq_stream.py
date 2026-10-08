@@ -10,6 +10,7 @@ import json
 import subprocess
 import sys
 import time
+import traceback
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -18,8 +19,12 @@ sys.path.insert(0, str(ROOT / "vendor/python-packages"))
 
 def validate_source(metadata):
     width, height, fps = metadata["width"], metadata["height"], metadata["fps"]
-    if width <= 0 or height <= 0 or width % 2 or height % 2 or not (1 <= fps <= 60.01) or width * height > 1280 * 720:
-        raise ValueError("HQ는 짝수 폭·높이, 720p 상당 이하, 1~60fps CFR 영상을 지원합니다. 권장은 480p 이하·30fps 이하입니다.")
+    if width <= 0 or height <= 0 or width % 2 or height % 2:
+        raise ValueError(f"영상의 실제 크기는 {width}×{height}입니다. HQ는 양수이며 짝수인 폭·높이가 필요합니다.")
+    if width * height > 1280 * 720:
+        raise ValueError(f"영상의 실제 해상도는 {width}×{height}입니다. HQ 지원 범위인 720p 상당(1280×720 픽셀 수)을 초과합니다. 파일명의 480/720 표기와 실제 해상도는 다를 수 있습니다.")
+    if not (1 <= fps <= 60.01):
+        raise ValueError(f"영상 프레임 속도({fps}fps)를 확인하지 못했거나 1~60fps 범위를 벗어났습니다.")
     if abs(metadata.get("par", 1) - 1) > 0.001 or metadata.get("rotate", 0) != 0:
         raise ValueError("HQ는 정사각 픽셀·회전 없는 영상을 지원합니다.")
 
@@ -66,30 +71,63 @@ def read_frame(pipe, size):
     return data
 
 
+def probe_source(video, session_dir, mpv):
+    command = [mpv, "--no-config", "--vo=null", "--audio=no", "--untimed", "--frames=12",
+               f"--script={ROOT / 'hq_probe.lua'}", str(video.resolve())]
+    result = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=30,
+                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    (session_dir / "probe.log").write_text(result.stdout + result.stderr, encoding="utf-8")
+    source_lines = [line for line in result.stdout.splitlines() if "HQ_SOURCE " in line]
+    if result.returncode or not source_lines:
+        raise RuntimeError("영상 메타데이터 조회 실패. 해당 재생 로그의 probe.log를 확인하세요.")
+    # Prefer a valid snapshot if an older probe script emitted an unload event.
+    candidates = [json.loads(line.split("HQ_SOURCE ", 1)[1]) for line in source_lines]
+    return select_probe_snapshot(candidates)
+
+
+def select_probe_snapshot(candidates):
+    for metadata in reversed(candidates):
+        if metadata.get("width", 0) > 0 and metadata.get("height", 0) > 0 and metadata.get("fps", 0) > 0:
+            return metadata
+    raise ValueError("영상의 실제 프레임 속도를 조회하지 못했습니다. FPS 0으로 재생하지 않습니다.")
+
+
+def playback_session(requested=None):
+    root = (ROOT / "logs").resolve()
+    session_dir = Path(requested).resolve() if requested else root / ("hq-" + str(time.time_ns()))
+    if session_dir.parent != root or not session_dir.name.startswith("hq-"):
+        raise ValueError("재생 로그 폴더는 프로그램 logs 안의 hq-* 폴더여야 합니다.")
+    session_dir.mkdir(parents=True, exist_ok=True)
+    return session_dir
+
+
 def main():
-    import numpy as np
-    import onnxruntime as ort
     parser = argparse.ArgumentParser(description="HQ — Real-CUGAN Pro FP16 DirectML 순차 재생")
     parser.add_argument("video", type=Path)
     parser.add_argument("--frames", type=int, default=0, help="검증용 최대 프레임 수; 0은 전체")
     parser.add_argument("--mute", action="store_true")
+    parser.add_argument("--session-dir", type=Path, help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not args.video.is_file() or args.frames < 0:
         parser.error("유효한 영상 경로와 0 이상의 frames가 필요합니다.")
+    session_dir = playback_session(args.session_dir)
+    (session_dir / "input.json").write_text(json.dumps({"source": str(args.video.resolve())}, ensure_ascii=False, indent=2), encoding="utf-8")
+    try:
+        return run_playback(args, session_dir)
+    except Exception as error:
+        (session_dir / "error.json").write_text(json.dumps({"message": str(error), "type": type(error).__name__,
+                                                            "source": str(args.video.resolve())}, ensure_ascii=False, indent=2), encoding="utf-8")
+        (session_dir / "error.txt").write_text(traceback.format_exc(), encoding="utf-8")
+        raise
+
+
+def run_playback(args, session_dir):
+    import numpy as np
+    import onnxruntime as ort
     job = owned_job()
-    session_dir = ROOT / "logs" / ("hq-" + str(time.time_ns()))
-    session_dir.mkdir(parents=True)
     mpv = str(ROOT / "vendor/mpv/mpv.exe")
     hidden = getattr(subprocess, "CREATE_NO_WINDOW", 0)
-    probe = subprocess.run([mpv, "--no-config", "--vo=null", "--ao=null", "--frames=1",
-                            f"--script={ROOT / 'hq_probe.lua'}", str(args.video.resolve())],
-                           capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=20,
-                           creationflags=hidden)
-    source_lines = [line for line in probe.stdout.splitlines() if "HQ_SOURCE " in line]
-    line = source_lines[-1] if source_lines else None
-    if probe.returncode or not line:
-        raise RuntimeError("영상 메타데이터 조회 실패")
-    metadata = json.loads(line.split("HQ_SOURCE ", 1)[1])
+    metadata = probe_source(args.video, session_dir, mpv)
     width, height, fps = metadata["width"], metadata["height"], metadata["fps"]
     (session_dir / "selection.json").write_text(json.dumps({"source": metadata, "profile": "pro-fast"}, ensure_ascii=False, indent=2), encoding="utf-8")
     validate_source(metadata)
@@ -116,6 +154,7 @@ def main():
     renderer = None
     count = 0
     compute_times = []
+    user_stopped = False
     started = time.perf_counter()
     try:
         decoder = subprocess.Popen(decoder_args, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
@@ -160,10 +199,13 @@ def main():
         if renderer.stdin:
             renderer.stdin.close()
         renderer.wait(timeout=20)
-        decoder.wait(timeout=10)
         if renderer.returncode:
             raise RuntimeError(f"HQ 렌더러 실패 ({renderer.returncode})")
-        if decoder.returncode:
+        user_stopped = frame is not None and (not args.frames or count < args.frames)
+        if user_stopped and decoder.poll() is None:
+            decoder.terminate()
+        decoder.wait(timeout=10)
+        if decoder.returncode and not user_stopped:
             raise RuntimeError(f"디코더 실패 ({decoder.returncode})")
     except BrokenPipeError:
         if renderer and renderer.poll() not in (None, 0):
@@ -178,6 +220,7 @@ def main():
                     process.kill()
         report = {"source": str(args.video.resolve()), "source_metadata": metadata,
                   "output_frames_written": count, "elapsed_seconds": time.perf_counter() - started,
+                  "user_stopped": user_stopped,
                   "compute_fps": len(compute_times) / sum(compute_times) if compute_times else 0,
                   "compute_p95_ms": float(np.percentile(compute_times, 95)) * 1000 if compute_times else 0,
                   "mode": "pro-fast", "model": model_name, "device_id": device_id, "device_name": device_name,

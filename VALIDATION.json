@@ -1,35 +1,114 @@
 {
   "status": "passed",
   "runtime": "HQ — Real-CUGAN Pro FP16 only",
-  "source_checks": "4 unittest checks passed",
-  "checks": [
+  "source_checks": "6 checks passed",
+  "probe_fix": "preserve decoded metadata through unload; do not replace valid FPS with zero",
+  "mickey_metadata_stability": "10/10 queries passed",
+  "gui_error_detail": "per-session cause displayed",
+  "tested_videos": 6,
+  "scope": "10 seconds per actual <=720p video",
+  "playback": [
     {
-      "app": "AniEdge-for-AMD",
-      "gui": "HQ only; no mode selectors or auxiliary options",
+      "dimensions": [
+        640,
+        480
+      ],
+      "fps": 29.969999,
+      "exit_code": 0,
+      "tested_frames": 300,
+      "written_frames": 300,
+      "compute_fps": 83.96249227563696,
+      "compute_p95_ms": 12.72923499936951,
+      "renderer_drops": 0,
+      "decoder_drops": 0,
+      "max_abs_avsync_ms": 3.0548205555153998,
+      "wall_seconds": 12.03733160000047,
+      "sample": "sample-01"
+    },
+    {
+      "dimensions": [
+        640,
+        360
+      ],
+      "fps": 24,
       "exit_code": 0,
       "tested_frames": 240,
-      "model": "rx9070xt-pro-x2-rgb8-fp16.onnx",
-      "device": "AMD Radeon RX 9070 XT",
-      "compute_fps": 83.8030113844954,
-      "compute_p95_ms": 12.864779998926677,
-      "playback_summary": "[  10.642][i][hq_controls] HQ playback summary: renderer_drops=0; decoder_drops=0; max_abs_avsync=4.8000000058279e-06; avsync_samples=20",
-      "wall_seconds": 12.394079499999862
+      "written_frames": 240,
+      "compute_fps": 108.36005499848537,
+      "compute_p95_ms": 10.030129999449853,
+      "renderer_drops": 0,
+      "decoder_drops": 0,
+      "max_abs_avsync_ms": 14.940036734694,
+      "wall_seconds": 11.699711199999001,
+      "sample": "sample-02"
     },
     {
-      "app": "anime-restore",
-      "gui": "HQ only; no mode selectors or auxiliary options",
+      "dimensions": [
+        640,
+        480
+      ],
+      "fps": 29.969999,
       "exit_code": 0,
-      "tested_frames": 48,
-      "model": "rx9070xt-pro-x2-rgb8-fp16.onnx",
-      "device": "AMD Radeon RX 9070 XT",
-      "compute_fps": 95.17743850510779,
-      "compute_p95_ms": 11.317489998691599,
-      "playback_summary": "[   2.540][i][hq_controls] HQ playback summary: renderer_drops=0; decoder_drops=0; max_abs_avsync=5.0000000006156e-06; avsync_samples=4",
-      "wall_seconds": 4.205416099999638
+      "tested_frames": 300,
+      "written_frames": 300,
+      "compute_fps": 93.8153687904349,
+      "compute_p95_ms": 11.166234999927838,
+      "renderer_drops": 0,
+      "decoder_drops": 0,
+      "max_abs_avsync_ms": 21.659161434267002,
+      "wall_seconds": 11.772662999999739,
+      "sample": "sample-03"
     },
     {
-      "app": "AniEdge-for-AMD",
-      "stop_cleanup": "decoder and renderer exited"
+      "dimensions": [
+        640,
+        480
+      ],
+      "fps": 25,
+      "exit_code": 0,
+      "tested_frames": 250,
+      "written_frames": 250,
+      "compute_fps": 91.50881304882766,
+      "compute_p95_ms": 11.615920000258484,
+      "renderer_drops": 0,
+      "decoder_drops": 0,
+      "max_abs_avsync_ms": 15.098940816327001,
+      "wall_seconds": 11.66655990000072,
+      "sample": "sample-04"
+    },
+    {
+      "dimensions": [
+        640,
+        480
+      ],
+      "fps": 23.975544,
+      "exit_code": 0,
+      "tested_frames": 240,
+      "written_frames": 240,
+      "compute_fps": 92.59963044987663,
+      "compute_p95_ms": 11.590234999493985,
+      "renderer_drops": 0,
+      "decoder_drops": 0,
+      "max_abs_avsync_ms": 33.780526363785,
+      "wall_seconds": 11.667038600000524,
+      "sample": "sample-05"
+    },
+    {
+      "dimensions": [
+        640,
+        480
+      ],
+      "fps": 23.975985,
+      "exit_code": 0,
+      "tested_frames": 240,
+      "written_frames": 240,
+      "compute_fps": 93.0052279403528,
+      "compute_p95_ms": 11.482394998893142,
+      "renderer_drops": 0,
+      "decoder_drops": 0,
+      "max_abs_avsync_ms": 0.0045000000068185,
+      "wall_seconds": 11.659624199999598,
+      "sample": "sample-06"
     }
   ]
 }

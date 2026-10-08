@@ -1,10 +1,10 @@
 # AniEdge for AMD
 
-Windows용 로컬 애니메이션 복원 플레이어입니다. **HQ — Real-CUGAN Pro FP16 ×2**만 사용하며 RX 9070 XT의 DirectML 추론으로 재생합니다. 현재 버전은 **0.1.1-preview.1**입니다.
+Windows용 로컬 애니메이션 복원 플레이어입니다. **HQ — Real-CUGAN Pro FP16 ×2**만 사용하며 RX 9070 XT의 DirectML 추론으로 재생합니다. 현재 버전은 **0.1.1-preview.2**입니다.
 
 ## 실행
 
-1. [HQ 전용 릴리스](https://github.com/KORTibetfox/AniEdge-for-AMD/releases/tag/v0.1.1-preview.1)에서 `AniEdge-for-AMD-v0.1.1-preview.1-windows-x64.zip`을 다운로드하고 새 폴더에 압축을 풉니다.
+1. [HQ 전용 릴리스](https://github.com/KORTibetfox/AniEdge-for-AMD/releases/tag/v0.1.1-preview.2)에서 `AniEdge-for-AMD-v0.1.1-preview.2-windows-x64.zip`을 다운로드하고 새 폴더에 압축을 풉니다.
 2. Python 3.12 64비트(tkinter·pip 포함)를 준비하고 처음 한 번 `setup.cmd`를 실행합니다.
 3. `start.cmd`를 실행합니다.
 4. MP4 또는 MKV를 선택하고 **재생**을 누릅니다. 모델이나 모드를 선택할 필요가 없습니다.
@@ -30,7 +30,9 @@ Real-CUGAN Pro conservative ×2의 기존 가중치에 FP16 변환, RGB8 전처�
 
 기존 640×480 프레임 60개 검사에서 처리량은 28.39 → 89.11fps, 처리 p95는 11.39ms였습니다. 모델 처리량은 전체 재생 FPS와 다릅니다. FP32 대비 정밀도 검사 수치도 원본 대비 복원 화질 점수가 아닙니다.
 
-이번 HQ 전용 버전은 실제 480p 영상 240프레임의 음성 포함 재생에서 렌더러·디코더 드롭 0, 종료 시 자식 프로세스 정리를 확인했습니다. 결과는 `VALIDATION.json`에 있습니다. 전체 에피소드의 장시간 안정성 검증은 아닙니다.
+이번 버전은 실제 360p·480p 영상 6개를 각각 10초씩 음성 포함 재생해 오류·렌더러 드롭·디코더 드롭 0을 확인했습니다. FPS 조회 종료 시 유효한 값이 0으로 바뀌던 문제를 수정하고, 문제가 있던 영상의 조회를 10회 반복 검증했습니다. 재생 창 정상 종료도 확인했습니다. 결과는 `VALIDATION.json`에 있습니다. 전체 에피소드의 장시간 안정성 검증은 아닙니다.
+
+실패하면 화면에 실제 원인이 표시됩니다. 해당 재생의 `logs/hq-*/error.json`, `error.txt`, `probe.log`를 확인하세요. 파일명에 480·720이 들어가더라도 실제 해상도가 지원 범위를 넘으면 재생할 수 없습니다.
 
 ## 개발 자료
 

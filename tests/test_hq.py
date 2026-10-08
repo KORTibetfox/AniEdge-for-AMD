@@ -2,7 +2,7 @@ import ast
 import io
 from pathlib import Path
 import unittest
-from hq_stream import read_frame, validate_source
+from hq_stream import read_frame, validate_source, select_probe_snapshot, playback_session
 
 
 class HQ(unittest.TestCase):
@@ -26,6 +26,17 @@ class HQ(unittest.TestCase):
         self.assertIsNone(read_frame(io.BytesIO(), 3))
         with self.assertRaises(RuntimeError):
             read_frame(io.BytesIO(b'ab'), 3)
+
+    def test_unload_snapshot_does_not_replace_valid_fps(self):
+        valid = {**self.source, 'fps': 29.97, 'duration': 5140.6}
+        unloading = {**valid, 'fps': 0, 'duration': 0}
+        self.assertEqual(select_probe_snapshot([valid, unloading]), valid)
+        with self.assertRaises(ValueError):
+            select_probe_snapshot([unloading])
+
+    def test_session_cannot_write_outside_logs(self):
+        with self.assertRaises(ValueError):
+            playback_session(Path(__file__).resolve().parents[1] / 'hq-outside-logs')
 
     def test_python_sources_parse(self):
         for path in Path(__file__).resolve().parents[1].glob('*.py'):
