@@ -1,25 +1,35 @@
 {
-  "date": "2026-10-08",
-  "device": "AMD Radeon RX 9070 XT",
-  "models": [
-    "Real-CUGAN Pro conservative x2 FP16 RGB8",
-    "ArtCNN C4F32 native GLSL"
-  ],
-  "syntax": "passed",
-  "tk_default_profile": "adaptive",
-  "tk_required_height": 525,
-  "profile_boundaries": "passed",
-  "precision_samples": 45,
-  "all_precision_gates_passed": true,
-  "paired_processing_speedup": 3.138458490607331,
-  "playback_files": 15,
-  "zero_renderer_drop_files": 13,
-  "limitations": [
-    "sample playback only",
-    "residual startup drops",
-    "HQ CFR sequential timing",
-    "4K display untested"
-  ],
-  "evidence_folder": "docs/benchmarks",
-  "native_hd_job_cleanup": "passed"
+  "status": "passed",
+  "runtime": "HQ — Real-CUGAN Pro FP16 only",
+  "source_checks": "4 unittest checks passed",
+  "checks": [
+    {
+      "app": "AniEdge-for-AMD",
+      "gui": "HQ only; no mode selectors or auxiliary options",
+      "exit_code": 0,
+      "tested_frames": 240,
+      "model": "rx9070xt-pro-x2-rgb8-fp16.onnx",
+      "device": "AMD Radeon RX 9070 XT",
+      "compute_fps": 83.8030113844954,
+      "compute_p95_ms": 12.864779998926677,
+      "playback_summary": "[  10.642][i][hq_controls] HQ playback summary: renderer_drops=0; decoder_drops=0; max_abs_avsync=4.8000000058279e-06; avsync_samples=20",
+      "wall_seconds": 12.394079499999862
+    },
+    {
+      "app": "anime-restore",
+      "gui": "HQ only; no mode selectors or auxiliary options",
+      "exit_code": 0,
+      "tested_frames": 48,
+      "model": "rx9070xt-pro-x2-rgb8-fp16.onnx",
+      "device": "AMD Radeon RX 9070 XT",
+      "compute_fps": 95.17743850510779,
+      "compute_p95_ms": 11.317489998691599,
+      "playback_summary": "[   2.540][i][hq_controls] HQ playback summary: renderer_drops=0; decoder_drops=0; max_abs_avsync=5.0000000006156e-06; avsync_samples=4",
+      "wall_seconds": 4.205416099999638
+    },
+    {
+      "app": "AniEdge-for-AMD",
+      "stop_cleanup": "decoder and renderer exited"
+    }
+  ]
 }

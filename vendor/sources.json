@@ -6,17 +6,6 @@
     "sha256": "9c565cf6ee873a9ee3639107b2fdabca53a43a72af2aba94b0015d3dd25b6a7e"
   },
   {
-    "repo": "bloc97/Anime4K",
-    "tag": "v4.0.1",
-    "url": "https://github.com/bloc97/Anime4K/releases/download/v4.0.1/Anime4K_v4.0.zip",
-    "sha256": "139cd282086457c5adc79caf7b75b8b825091d71c9b54958c18745fea62d7ed7"
-  },
-  {
-    "repo": "nihui/realcugan-ncnn-vulkan",
-    "url": "https://github.com/nihui/realcugan-ncnn-vulkan/releases/download/20220728/realcugan-ncnn-vulkan-20220728-windows.zip",
-    "sha256": "c6e08d46c11704b1e3a1ada9ddd591cb5005f52f132136c8633ba25def400e01"
-  },
-  {
     "repo": "AmusementClub/vs-mlrt",
     "url": "https://github.com/AmusementClub/vs-mlrt/releases/download/model-20211209/cugan-pro_v3.7z",
     "sha256": "71f21c747ccdf021787bfcbca21d519217464588c1a00c5402e851519c8dec58"
@@ -25,27 +14,6 @@
     "package": "onnxruntime-directml",
     "version": "1.24.4",
     "source": "https://pypi.org/project/onnxruntime-directml/1.24.4/"
-  },
-  {
-    "url": "https://raw.githubusercontent.com/Artoriuz/ArtCNN/main/GLSL/ArtCNN_C4F32.glsl",
-    "name": "ArtCNN_C4F32.glsl",
-    "repo": "Artoriuz/ArtCNN",
-    "retrieved": "2026-10-08",
-    "sha256": "f773bce6cf5fe7e5e5d599a695edd40df5cd7a20c3d08c4d164d07591d5bead3"
-  },
-  {
-    "url": "https://raw.githubusercontent.com/Artoriuz/ArtCNN/main/GLSL/ArtCNN_C4F32_DS.glsl",
-    "name": "ArtCNN_C4F32_DS.glsl",
-    "repo": "Artoriuz/ArtCNN",
-    "retrieved": "2026-10-08",
-    "sha256": "a04c9cba6fbb8e6db9239d61848390208aedf8e348ef116e12174c803d22077e"
-  },
-  {
-    "url": "https://raw.githubusercontent.com/Artoriuz/ArtCNN/main/GLSL/ArtCNN_C4F16.glsl",
-    "name": "ArtCNN_C4F16.glsl",
-    "repo": "Artoriuz/ArtCNN",
-    "retrieved": "2026-10-08",
-    "sha256": "03d0b3d31cb82c898a94a46663021a3e8f02c5a21d69c5cfdf0208de4bfd453e"
   },
   {
     "local_path": "vendor/onnx-models/rx9070xt-pro-x2-rgb8-fp16.onnx",
@@ -60,11 +28,5 @@
     "build_script": "build_optimized_model.py",
     "conversion": "RGB8 GPU preprocessing and postprocessing; FP16 or FP32 core",
     "sha256": "1b186fbdb1bb02599830b8d1a4d0f85561c233f34d39109d40338d01a01744a4"
-  },
-  {
-    "local_path": "shaders/ArtCNN_C4F32_Native.glsl",
-    "derived_from": "ArtCNN_C4F32.glsl",
-    "modification": "All eight WHEN conditions changed to 1 to apply CNN at native resolutions",
-    "sha256": "2022757f7a04c77b5ca0a86720a1f2140c067a8e9d98751825d09e631476888c"
   }
 ]

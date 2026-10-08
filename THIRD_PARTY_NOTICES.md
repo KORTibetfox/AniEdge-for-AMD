@@ -4,8 +4,6 @@
 
 | 구성 요소 | 출처 | 라이선스 / 배포 |
 |---|---|---|
-| Anime4K GLSL 셰이더 | https://github.com/bloc97/Anime4K | MIT, `vendor/licenses/Anime4K-MIT.txt` |
-| ArtCNN GLSL 셰이더 및 Native 파생본 | https://github.com/Artoriuz/ArtCNN | MIT, `vendor/licenses/ArtCNN-MIT.txt` 및 파일 머리말 |
 | Real-CUGAN 원본 모델 | https://github.com/bilibili/ailab/tree/main/Real-CUGAN | 원본 MIT, `vendor/licenses/Real-CUGAN-LICENSE.txt` |
 | Real-CUGAN Pro ONNX 내보내기 | https://github.com/AmusementClub/vs-mlrt/releases/tag/model-20211209 | upstream GPL-3.0 사본 유지: `vendor/licenses/vs-mlrt-LICENSE.txt`; 원본 ONNX 및 변환 스크립트 제공 |
 | mpv Windows CI 빌드 | https://github.com/mpv-player/mpv | 설치 시 공식 배포에서 다운로드. 실행 파일은 이 릴리스 ZIP에 재배포하지 않음. Copyright 및 LGPL 문서 사본 포함 |
