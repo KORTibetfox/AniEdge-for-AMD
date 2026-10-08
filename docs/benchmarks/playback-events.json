@@ -1,0 +1,86 @@
+[
+  {
+    "name": "sample-01.mp4",
+    "renderer_drops": 4,
+    "drop_events": [
+      {
+        "time": 0.6604,
+        "count": 3
+      },
+      {
+        "time": 3.2025,
+        "count": 4
+      }
+    ]
+  },
+  {
+    "name": "sample-02.mp4",
+    "renderer_drops": 1,
+    "drop_events": [
+      {
+        "count": 1,
+        "time": 0.433267
+      }
+    ]
+  },
+  {
+    "name": "sample-04.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-05.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-06.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-07.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-08.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-09.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-10.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-11.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-12.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-13.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-14.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  },
+  {
+    "name": "sample-15.mp4",
+    "renderer_drops": 0,
+    "drop_events": []
+  }
+]

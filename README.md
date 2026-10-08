@@ -1,2 +1,60 @@
-# AniEdge-for-AMD
-AniEdge for AMD — Windows anime restoration player tuned for RX 9070 XT, with Real-CUGAN Pro FP16 and ArtCNN Vulkan profiles.
+# AniEdge for AMD
+
+Windows용 로컬 애니메이션 AI 복원 플레이어입니다. **RX 9070 XT**에서 저해상도 복원과 고해상도·고FPS 재생 경로를 나눠 최적화했습니다. 현재 버전은 **0.1.0-preview.1**입니다.
+
+## 실행
+
+1. [Releases](https://github.com/KORTibetfox/AniEdge-for-AMD/releases)에서 `AniEdge-for-AMD-v0.1.0-preview.1-windows-x64.zip`을 내려받아 압축을 풉니다.
+2. Python 3.12 **64비트**를 설치합니다. tkinter·pip를 포함하고 `py` 런처 또는 PATH 등록을 선택하세요.
+3. 처음 한 번 `setup.cmd`를 실행합니다. 인터넷 연결이 필요하며 mpv와 Python 의존성을 준비하고 파일 해시를 확인합니다.
+4. `start.cmd`를 실행해 MP4/MKV를 선택하고 **자동 → 재생**을 누릅니다.
+
+Windows 10/11 x64와 Vulkan·DirectML을 지원하는 AMD 드라이버가 필요합니다. 검증 장치는 RX 9070 XT이며 다른 GPU로의 자동 전환은 제공하지 않습니다. Python 설치 경로를 직접 지정하려면 PowerShell에서 `powershell -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1 -PythonPath 'D:\Python312\python.exe'`를 실행하세요.
+
+코드로 설치할 경우에도 저장소를 내려받고 `setup.cmd`를 실행하면 됩니다. 모델은 릴리스에서, mpv는 공식 GitHub 배포에서 내려받습니다. 릴리스 ZIP에는 최적화 모델이 포함되어 있어 모델 다운로드가 생략됩니다. 전용 EXE나 Python 자체를 포함한 완전 독립 실행 패키지는 아닙니다.
+
+## 모드 선택
+
+| 모드 | 모델과 목적 | 탐색 |
+|---|---|---|
+| 자동 | 입력 규격을 읽어 아래 HQ/HD 경로 선택 | 선택된 경로에 따라 다름 |
+| HQ | Real-CUGAN Pro conservative x2 **FP16**, 오래된 저해상도 복원 | 순차 재생 |
+| HD | **ArtCNN C4F32**, 고해상도·고FPS용 Vulkan CNN | 가능 |
+| 가벼운 / 강한 복원 | Anime4K CNN, 비교·보조 모드 | 가능 |
+| 원본 | AI 셰이더 끄기 | 가능 |
+
+자동 HQ 조건은 640×480 상당 이하의 픽셀 수, 1~30fps, 짝수 크기, 정사각 픽셀, 회전·인터레이스 없음입니다. 그 외에는 HD를 선택합니다. 수동 HQ는 720p 이하를 허용하지만 720p 실시간 성능을 보장하지 않습니다. VFR·내장 자막·다중 음성 트랙 사용 시에는 HD를 선택하세요.
+
+ArtCNN 이름의 **C4F32는 FP32 연산 정밀도를 뜻하지 않습니다**. 포함된 셰이더는 지원되는 환경에서 FP16 연산을 사용합니다. HD는 원본 크기에서 휘도를 내부 2배 재구성한 뒤 창 크기로 표시합니다. 1440p 영상에서도 CNN을 실행하도록 조건을 수정했습니다. Real-CUGAN과 화질·복원 성향이 같다고 가정하지 않습니다.
+
+## RX 9070 XT 측정
+
+| 측정 항목 | 결과 |
+|---|---|
+| 동일 480p 프레임 60개의 기존 FP32 처리량 | 28.4fps |
+| FP16 + GPU 전후처리 + 입력 크기 고정 | 89.1fps, 약 3.1배 향상 |
+| 45개 장면의 FP32 대비 변환 오차 | 전부 기준 통과, 최저 PSNR 약 55.0dB |
+| 실제 1440p·60fps 파일의 GPU 렌더 패스 평균 합계 | 약 10.9ms/프레임 |
+| 15개 파일의 약 10초 재생 검사 | 13개 드롭 0, 나머지 시작 구간 4개 / 1개 |
+
+처리량은 디코딩·화면 표시·음성·모델 로딩을 제외한 수치입니다. GPU 렌더 패스 평균과 전체 프레임 처리 지연은 서로 다릅니다. 상세 조건과 익명화한 결과는 [측정 보고서](docs/benchmarks/REPORT.md)에 있습니다.
+
+## 조작과 현재 제한
+
+- 공통: Space 일시정지, F 전체화면, I 통계, Q 종료.
+- HD·Anime4K: 방향키 시간 탐색. Anime4K에서만 1~4 복원 모드 전환.
+- HQ: 시간 탐색·재생 중 복원 전환을 지원하지 않습니다. 원본과 같은 이름의 외부 SRT/ASS/SSA 자막을 연결합니다.
+- 자동 강도 하향은 기본적으로 꺼져 있으며 Anime4K에서만 작동합니다. 자동 모델 선택은 재생 시작 때 이루어집니다.
+
+HQ는 CFR 타이밍을 가정하고 CPU RGB 입출력 복사를 사용합니다. HD의 확인된 디코더는 `d3d11va-copy`이므로 전체 경로 무복사는 아닙니다. 30fps 이하 HD에는 화면 주사율 보정, 고FPS에는 원본 음성 기준 동기화를 사용합니다. 시작 구간 드롭 일부가 남아 있으며 실제 4K 표시·전체 에피소드 장시간 재생·RDNA 행렬 가속 명령 사용은 검증하지 않았습니다.
+
+원본 영상은 로컬에서 읽으며 프로그램에 영상 업로드 기능은 없습니다. 설치 시에는 GitHub와 PyPI에서 의존성을 내려받습니다. 실행 로그에는 로컬 경로가 기록되므로 공유할 때 확인하세요.
+
+## 개발 기록
+
+- [진행 상황](docs/PROGRESS.md)
+- [구조와 재현](docs/ARCHITECTURE.md)
+- [변경 기록](CHANGELOG.md)
+- [외부 구성 요소](THIRD_PARTY_NOTICES.md)
+
+자체 작성 코드의 라이선스는 MIT입니다. 외부 셰이더·모델·변환 파일·런타임에는 각각의 원본 라이선스가 적용됩니다. AMD와 공식 제휴한 제품은 아닙니다.

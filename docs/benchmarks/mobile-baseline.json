@@ -1,0 +1,47 @@
+[
+  {
+    "mode": "baseline",
+    "frames": 240,
+    "renderer_drops": 4,
+    "decoder_drops": 0,
+    "max_abs_avsync_ms": 192.562,
+    "hwdec": "d3d11va-copy",
+    "warmup_pause_script": false
+  },
+  {
+    "mode": "resample",
+    "frames": 240,
+    "renderer_drops": 2,
+    "decoder_drops": 0,
+    "max_abs_avsync_ms": 15.806000000000001,
+    "hwdec": "d3d11va-copy",
+    "warmup_pause_script": false
+  },
+  {
+    "mode": "ai-resample",
+    "frames": 240,
+    "renderer_drops": 4,
+    "decoder_drops": 0,
+    "max_abs_avsync_ms": 16.467,
+    "hwdec": "d3d11va-copy",
+    "warmup_pause_script": false
+  },
+  {
+    "mode": "software-baseline",
+    "frames": 240,
+    "renderer_drops": 2,
+    "decoder_drops": 0,
+    "max_abs_avsync_ms": 16.974,
+    "hwdec": "no",
+    "warmup_pause_script": false
+  },
+  {
+    "mode": "software-ai",
+    "frames": 240,
+    "renderer_drops": 4,
+    "decoder_drops": 0,
+    "max_abs_avsync_ms": 19.426,
+    "hwdec": "no",
+    "warmup_pause_script": false
+  }
+]

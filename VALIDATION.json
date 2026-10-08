@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-08",
+  "device": "AMD Radeon RX 9070 XT",
+  "models": [
+    "Real-CUGAN Pro conservative x2 FP16 RGB8",
+    "ArtCNN C4F32 native GLSL"
+  ],
+  "syntax": "passed",
+  "tk_default_profile": "adaptive",
+  "tk_required_height": 525,
+  "profile_boundaries": "passed",
+  "precision_samples": 45,
+  "all_precision_gates_passed": true,
+  "paired_processing_speedup": 3.138458490607331,
+  "playback_files": 15,
+  "zero_renderer_drop_files": 13,
+  "limitations": [
+    "sample playback only",
+    "residual startup drops",
+    "HQ CFR sequential timing",
+    "4K display untested"
+  ],
+  "evidence_folder": "docs/benchmarks",
+  "native_hd_job_cleanup": "passed"
+}

@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0-preview.1",
+  "assets": [
+    {
+      "id": "mpv",
+      "url": "https://github.com/mpv-player/mpv/releases/download/git-release/mpv-v0.41.0-dev-g36abaa32d-37706623532-x86_64-pc-windows-msvc.zip",
+      "sha256": "9c565cf6ee873a9ee3639107b2fdabca53a43a72af2aba94b0015d3dd25b6a7e",
+      "cache_name": "mpv-windows-x64.zip",
+      "kind": "mpv",
+      "files": {
+        "vendor/mpv/mpv.exe": "5377112f8e8498f9bc6a8a2b7061bdbdfa47d00d1002637b7c14c55a876b2492",
+        "vendor/mpv/mpv.com": "f6947208bf3ed00168378bd94a1aed922b1cf6f8f6405bdae10393592ec3c98c",
+        "vendor/mpv/vulkan-1.dll": "5b177d5ad29f1407937f614f95e658d10648cb69ca8fbbb2894ab02c75a4bd6d"
+      }
+    },
+    {
+      "id": "models",
+      "url": "https://github.com/KORTibetfox/AniEdge-for-AMD/releases/download/v0.1.0-preview.1/AniEdge-models-v0.1.0.zip",
+      "sha256": "23c84591d80461e6631cc29c2ee9981e9171e989a9ab320ba2c00303ffc89730",
+      "cache_name": "AniEdge-models-v0.1.0.zip",
+      "kind": "models",
+      "files": {
+        "vendor/onnx-models/pro-conservative-up2x.onnx": "391a30605ca4101b54ff968728512b344ef277d8dbd1f686b12f0bf6c0c2d9e8",
+        "vendor/onnx-models/rx9070xt-pro-x2-rgb8-fp16.onnx": "122163042028525e0ee08b6e5c23776ebf4671fdd12e7a3728be2bd7dad11b41",
+        "vendor/onnx-models/rx9070xt-pro-x2-rgb8-fp32.onnx": "1b186fbdb1bb02599830b8d1a4d0f85561c233f34d39109d40338d01a01744a4"
+      }
+    }
+  ]
+}

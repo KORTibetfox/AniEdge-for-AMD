@@ -1,0 +1,5 @@
+-r requirements.txt
+onnx==1.23.2
+onnxconverter-common==1.16.0
+protobuf==7.36.2
+ml_dtypes==0.6.0

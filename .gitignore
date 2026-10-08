@@ -1,0 +1,13 @@
+.venv/
+.cache/
+__pycache__/
+*.pyc
+logs/
+vendor/mpv/
+vendor/onnx-models/
+vendor/python-packages/
+benchmark-results/
+*.mp4
+*.mkv
+*.wav
+.env
